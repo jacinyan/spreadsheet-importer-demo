@@ -1,5 +1,5 @@
 class Person < ApplicationRecord
-  validates :first_name, presence: {message: "First name can't be blank"}
+  validates :first_name, presence: { message: "First name can't be blank" }
 
   has_many :people_locations, class_name: "PeopleLocations"
   has_many :people_affiliations, class_name: "PeopleAffiliations"

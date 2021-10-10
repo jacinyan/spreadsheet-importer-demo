@@ -9,5 +9,6 @@ Rails.application.routes.draw do
     end
   end
 
+  # redirect to root for SPA
   get '*path', to: 'pages#index', via: :all
 end
