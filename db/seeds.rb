@@ -18,7 +18,7 @@ people = Person.create(
   ]
 )
 
-locations = Location.create(
+people_locations = Location.create(
   [
     {
       name: 'Tatooine'
@@ -47,7 +47,7 @@ locations = Location.create(
   ]
 )
 
-affiliations = Affiliation.create(
+people_affiliations = Affiliation.create(
   [
     { name: 'Sith' },
     { name: 'Jedi Order' },

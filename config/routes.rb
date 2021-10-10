@@ -3,9 +3,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :people
-      resources :locations
-      resources :affiliations
+      get :people, to: 'people#index'
+      post :people, to: 'people#create'
+      #resources :locations
+      #resources :affiliations
     end
   end
 

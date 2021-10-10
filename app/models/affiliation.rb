@@ -3,5 +3,5 @@ class Affiliation < ApplicationRecord
 
   has_many :people, through: :people_affiliations
 
-  validates :name, presence: { message: "Affiliation name can't be blank" }
+  #validates_uniqueness_of :affiliation_id
 end
