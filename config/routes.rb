@@ -5,11 +5,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       get :people, to: 'people#index'
       post :people, to: 'people#create'
-      #resources :locations
-      #resources :affiliations
+
     end
   end
 
-  # redirect to root for SPA
+  # redirect to root for single page view
   get '*path', to: 'pages#index', via: :all
 end

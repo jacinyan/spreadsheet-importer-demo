@@ -31,20 +31,20 @@ module Api
             
             hashed_person.fetch_values("locations").flatten.each {
               |location|
-              location = Location.find_by(name: location)
-              location = Location.new(name: location) unless location
+              _location = Location.find_by(name: location)
+              _location = Location.new(name: location) unless _location
 
-              if location.save      
-                curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: location.id)
+              if _location.save      
+                curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: _location.id)
               end 
             }
             hashed_person.fetch_values("affiliations").flatten.each {
               |affiliation| 
-              affiliation = Affiliation.find_by(name: affiliation)
-              affiliation = Affiliation.new(name: affiliation)unless affiliation
+              _affiliation = Affiliation.find_by(name: affiliation)
+              _affiliation = Affiliation.new(name: affiliation)unless _affiliation
 
-              if affiliation.save 
-                curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: affiliation.id)
+              if _affiliation.save 
+                curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: _affiliation.id)
               end 
             }  
 
