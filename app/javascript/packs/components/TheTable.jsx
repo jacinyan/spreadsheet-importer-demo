@@ -47,30 +47,36 @@ import _ from 'lodash';
 const TheTable = () => {
   const { data: _people, isLoading, isError } = usePeople();
 
-  const people = useMemo(
-    () =>
-      _people.map((item) => {
-        const picked = _.pick(item, ['id', 'attributes', 'relationships']);
-        const {
-          attributes,
-          relationships: {
-            locations: { data: _locations },
-            affiliations: { data: _affiliations },
-          },
-          id,
-        } = picked;
+  const people = _people.map((item) => {
+    const picked = _.pick(item, ['id', 'attributes', 'relationships']);
+    const {
+      attributes,
+      relationships: {
+        locations: { data: _locations },
+        affiliations: { data: _affiliations },
+      },
+      id,
+    } = picked;
 
-        const obj = {
-          ...attributes,
-          locations: _locations,
-          affiliations: _affiliations,
-          id,
-        };
+    const locations = _locations.reduce((acc, curr) => {
+      return [...acc, curr.id];
+    }, []);
 
-        return obj;
-      }),
-    []
-  );
+    const affiliations = _affiliations.reduce((acc, curr) => {
+      return [...acc, curr.id];
+    }, []);
+
+    const person = {
+      ...attributes,
+      locations,
+      affiliations,
+      id,
+    };
+
+    return person;
+  });
+
+  console.log(people);
 
   return (
     <MaterialTable

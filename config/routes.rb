@@ -6,6 +6,9 @@ Rails.application.routes.draw do
       get :people, to: 'people#index'
       post 'people/all', to: 'people#create_all'
 
+      get :locations, to: 'locations#index'
+      get :affiliations, to: 'affiliations#index'
+
     end
   end
 
