@@ -43,7 +43,42 @@ const tableIcons = {
 import MaterialTable from 'material-table';
 
 const TheTable = () => {
-  return <MaterialTable icons={tableIcons} />;
+  return (
+    <MaterialTable
+      title={'Star Wars'}
+      icons={tableIcons}
+      columns={[
+        {
+          title: 'Name',
+          field: 'name',
+        },
+        {
+          title: 'Locations',
+          field: 'locations',
+        },
+        {
+          title: 'Species',
+          field: 'species',
+        },
+        {
+          title: 'Gender',
+          field: 'gender',
+        },
+        {
+          title: 'Affiliations',
+          field: 'affiliations',
+        },
+        {
+          title: 'Weapon',
+          field: 'weapon',
+        },
+        {
+          title: 'Vehicle',
+          field: 'vehicle',
+        },
+      ]}
+    />
+  );
 };
 
 export default TheTable;
