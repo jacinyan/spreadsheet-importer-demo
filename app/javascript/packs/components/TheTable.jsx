@@ -47,6 +47,7 @@ const TheTable = () => {
     <MaterialTable
       title={'Star Wars'}
       icons={tableIcons}
+      data={data}
       columns={[
         {
           title: 'Name',

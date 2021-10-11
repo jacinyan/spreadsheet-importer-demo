@@ -3,11 +3,21 @@ module Api
     class PeopleController < ApplicationController
       skip_before_action :verify_authenticity_token 
 
-        def index
-          @people = Person.page(params[:page]||1).per_page(params[:per_page]||5).order("id desc")
+        def index         
+          if params[:page]
+            @params = {number: nil, size:nil}
 
-          # render  json: PersonSerializer.new(@people).serializable_hash.to_json
-          render  json: @people
+            @params[:number] = params.permit![:page].to_hash['number'].to_i
+            @params[:size] = params.permit![:page].to_hash['size'].to_i
+          else
+            @params = {number: 1, size: 10}
+          end
+
+          @people = Person.page(@params[:number]).per_page(@params[:size])
+
+          total_count = Person.all.count
+
+          render  json: @people, meta: {total_count: total_count, page:@params[:number], page_size: @params[:size]}
           
         end
 
