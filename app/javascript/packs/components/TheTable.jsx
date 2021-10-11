@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -41,17 +41,50 @@ const tableIcons = {
 };
 
 import MaterialTable from 'material-table';
+import { usePeople } from '../hooks/usePeople';
+import _ from 'lodash';
 
 const TheTable = () => {
+  const { data: _people, isLoading, isError } = usePeople();
+
+  const people = useMemo(
+    () =>
+      _people.map((item) => {
+        const picked = _.pick(item, ['id', 'attributes', 'relationships']);
+        const {
+          attributes,
+          relationships: {
+            locations: { data: _locations },
+            affiliations: { data: _affiliations },
+          },
+          id,
+        } = picked;
+
+        const obj = {
+          ...attributes,
+          locations: _locations,
+          affiliations: _affiliations,
+          id,
+        };
+
+        return obj;
+      }),
+    []
+  );
+
   return (
     <MaterialTable
       title={'Star Wars'}
       icons={tableIcons}
-      data={data}
+      data={people}
       columns={[
         {
-          title: 'Name',
-          field: 'name',
+          title: 'First Name',
+          field: 'first-name',
+        },
+        {
+          title: 'Last Name',
+          field: 'last-name',
         },
         {
           title: 'Locations',
