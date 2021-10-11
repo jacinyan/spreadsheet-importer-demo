@@ -4,13 +4,15 @@ module Api
       skip_before_action :verify_authenticity_token 
 
         def index
-          @people = Person.all
+          @people = Person.page(params[:page]||1).per_page(params[:per_page]||5).order("id desc")
 
-          render json: PersonSerializer.new(@people).serializable_hash.to_json
+          # render  json: PersonSerializer.new(@people).serializable_hash.to_json
+          render  json: @people
+          
         end
 
         # TODO: move logic into models
-        def create
+        def create_all
           curr_people_locations = PeopleLocations.all.to_a
           curr_people_affiliations = PeopleAffiliations.all.to_a
           curr_locations = Location.all.to_a
@@ -41,7 +43,7 @@ module Api
             hashed_person.fetch_values("affiliations").flatten.each {
               |affiliation| 
               _affiliation = Affiliation.find_by(name: affiliation)
-              _affiliation = Affiliation.new(name: affiliation)unless _affiliation
+              _affiliation = Affiliation.new(name: affiliation) unless _affiliation
 
               if _affiliation.save 
                 curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: _affiliation.id)

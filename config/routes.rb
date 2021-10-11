@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get :people, to: 'people#index'
-      post :people, to: 'people#create'
+      post 'people/all', to: 'people#create_all'
 
     end
   end
