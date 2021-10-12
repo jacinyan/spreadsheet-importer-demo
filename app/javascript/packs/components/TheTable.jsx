@@ -54,7 +54,15 @@ import { useLocations } from '../hooks/useLocations';
 import { useAffiliations } from '../hooks/useAffiliations';
 
 const TheTable = () => {
-  const { data: _people, isLoading, isError } = usePeople();
+  const {
+    data: _people,
+    isLoading,
+    isError,
+    pageSize,
+    page,
+    setPage,
+    totalCount,
+  } = usePeople();
 
   const { data: _locations } = useLocations();
   const { data: _affiliations } = useAffiliations();
@@ -83,6 +91,7 @@ const TheTable = () => {
       };
     });
   }, [_people]);
+  console.log(people);
 
   const locations = useMemo(() => {
     return _locations.map((item) => {
@@ -138,7 +147,7 @@ const TheTable = () => {
             return (
               <>
                 {result.map((item) => {
-                  return <Fragment key={item.id}>{item.name}</Fragment>;
+                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
                 })}
               </>
             );
@@ -163,12 +172,12 @@ const TheTable = () => {
               .keyBy('id')
               .at(rowData.affiliations)
               .value();
-            console.log(result);
+            // console.log(result);
 
             return (
               <>
                 {result.map((item) => {
-                  return <Fragment key={item.id}>{item.name}</Fragment>;
+                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
                 })}
               </>
             );
@@ -183,6 +192,14 @@ const TheTable = () => {
           field: 'vehicle',
         },
       ]}
+      isLoading={isLoading}
+      options={{ pageSize, pageSizeOptions: [pageSize], loadingType: 'linear' }}
+      page={page}
+      totalCount={totalCount}
+      onChangePage={(page) => {
+        // console.log('onChangePage', page);
+        setPage(page);
+      }}
     />
   );
 };
