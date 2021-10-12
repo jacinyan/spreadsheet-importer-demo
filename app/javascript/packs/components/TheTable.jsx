@@ -1,4 +1,11 @@
-import React, { forwardRef, Fragment, useMemo } from 'react';
+import React, {
+  forwardRef,
+  Fragment,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -40,96 +47,125 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
+import _ from 'lodash';
 import MaterialTable from 'material-table';
 import { usePeople } from '../hooks/usePeople';
-import _ from 'lodash';
+import { useLocations } from '../hooks/useLocations';
+import { useAffiliations } from '../hooks/useAffiliations';
 
 const TheTable = () => {
   const { data: _people, isLoading, isError } = usePeople();
+
+  const { data: _locations } = useLocations();
+  const { data: _affiliations } = useAffiliations();
 
   const people = _people.map((item) => {
     const picked = _.pick(item, ['id', 'attributes', 'relationships']);
     const {
       attributes,
       relationships: {
-        locations: { data: _locations },
-        affiliations: { data: _affiliations },
+        locations: { data: _locations_ },
+        affiliations: { data: _affiliations_ },
       },
       id,
     } = picked;
 
-    const locations = _locations.reduce((acc, curr) => {
+    const locs = _locations_.reduce((acc, curr) => {
       return [...acc, curr.id];
     }, []);
 
-    const affiliations = _affiliations.reduce((acc, curr) => {
+    const affls = _affiliations_.reduce((acc, curr) => {
       return [...acc, curr.id];
     }, []);
 
-    const person = {
+    return {
       ...attributes,
-      locations,
-      affiliations,
+      locations: locs,
+      affiliations: affls,
       id,
     };
-
-    return person;
   });
 
-  const columns = useMemo(
-    () => [
-      {
-        title: 'First Name',
-        field: 'first-name',
-      },
-      {
-        title: 'Last Name',
-        field: 'last-name',
-      },
-      {
-        title: 'Locations',
-        field: 'locations',
-        render: (rowData) => {
-          return (
-            <>
-              {rowData.locations.map((location) => {
-                console.log(location);
-                return <Fragment key={location}>{location}</Fragment>;
-              })}
-            </>
-          );
-        },
-      },
-      {
-        title: 'Species',
-        field: 'species',
-      },
-      {
-        title: 'Gender',
-        field: 'gender',
-      },
-      {
-        title: 'Affiliations',
-        field: 'affiliations',
-      },
-      {
-        title: 'Weapon',
-        field: 'weapon',
-      },
-      {
-        title: 'Vehicle',
-        field: 'vehicle',
-      },
-    ],
-    []
-  );
+  const locations = _locations.map((item) => {
+    const picked = _.pick(item, ['id', 'attributes']);
+
+    const { attributes, id } = picked;
+    return {
+      ...attributes,
+      id,
+    };
+  });
+
+  // console.log('#####', affiliations);
+
+  const affiliations = _affiliations.map((item) => {
+    const picked = _.pick(item, ['id', 'attributes']);
+
+    const { attributes, id } = picked;
+    return {
+      ...attributes,
+      id,
+    };
+  });
+
+  // console.log('@@@@', affiliations);
 
   return (
     <MaterialTable
       title={'Star Wars'}
       icons={tableIcons}
       data={people}
-      columns={columns}
+      columns={[
+        {
+          title: 'First Name',
+          field: 'first-name',
+        },
+        {
+          title: 'Last Name',
+          field: 'last-name',
+        },
+        {
+          title: 'Locations',
+          field: 'locations',
+          render: (rowData) => {
+            console.log('!@#$%', locations);
+            console.log('asdfg', rowData.locations);
+
+            const result = locations.filter((id) =>
+              rowData.locations.includes('1')
+            );
+            console.log(result);
+
+            return (
+              <>
+                {rowData.locations.map((item, idx) => {
+                  return <Fragment key={idx}>{item}</Fragment>;
+                })}
+              </>
+            );
+          },
+        },
+        {
+          title: 'Species',
+          field: 'species',
+        },
+        {
+          title: 'Gender',
+          field: 'gender',
+        },
+        {
+          title: 'Affiliations',
+          field: 'affiliations',
+        },
+        {
+          title: 'Weapon',
+          field: 'weapon',
+        },
+        {
+          title: 'Vehicle',
+          field: 'vehicle',
+        },
+      ]}
     />
   );
 };
