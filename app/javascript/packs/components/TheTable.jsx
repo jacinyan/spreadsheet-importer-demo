@@ -59,56 +59,54 @@ const TheTable = () => {
   const { data: _locations } = useLocations();
   const { data: _affiliations } = useAffiliations();
 
-  const people = _people.map((item) => {
-    const picked = _.pick(item, ['id', 'attributes', 'relationships']);
-    const {
-      attributes,
-      relationships: {
-        locations: { data: _locations_ },
-        affiliations: { data: _affiliations_ },
-      },
-      id,
-    } = picked;
+  const people = useMemo(() => {
+    return _people.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes', 'relationships']);
+      const {
+        attributes,
+        relationships: {
+          locations: { data: _locations_ },
+          affiliations: { data: _affiliations_ },
+        },
+        id,
+      } = picked;
 
-    const locs = _locations_.reduce((acc, curr) => {
-      return [...acc, curr.id];
-    }, []);
+      const locs = _locations_.reduce((acc, curr) => [...acc, curr.id], []);
 
-    const affls = _affiliations_.reduce((acc, curr) => {
-      return [...acc, curr.id];
-    }, []);
+      const affls = _affiliations_.reduce((acc, curr) => [...acc, curr.id], []);
 
-    return {
-      ...attributes,
-      locations: locs,
-      affiliations: affls,
-      id,
-    };
-  });
+      return {
+        ...attributes,
+        locations: locs,
+        affiliations: affls,
+        id,
+      };
+    });
+  }, [_people]);
 
-  const locations = _locations.map((item) => {
-    const picked = _.pick(item, ['id', 'attributes']);
+  const locations = useMemo(() => {
+    return _locations.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes']);
+      const { attributes, id } = picked;
 
-    const { attributes, id } = picked;
-    return {
-      ...attributes,
-      id,
-    };
-  });
+      return {
+        ...attributes,
+        id,
+      };
+    });
+  }, [_locations]);
 
-  // console.log('#####', affiliations);
+  const affiliations = useMemo(() => {
+    return _affiliations.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes']);
+      const { attributes, id } = picked;
 
-  const affiliations = _affiliations.map((item) => {
-    const picked = _.pick(item, ['id', 'attributes']);
-
-    const { attributes, id } = picked;
-    return {
-      ...attributes,
-      id,
-    };
-  });
-
-  // console.log('@@@@', affiliations);
+      return {
+        ...attributes,
+        id,
+      };
+    });
+  }, [_affiliations]);
 
   return (
     <MaterialTable
@@ -128,18 +126,19 @@ const TheTable = () => {
           title: 'Locations',
           field: 'locations',
           render: (rowData) => {
-            console.log('!@#$%', locations);
-            console.log('asdfg', rowData.locations);
+            // console.log('!@#$%', locations);
+            // console.log('asdfg', rowData.locations);
 
-            const result = locations.filter((id) =>
-              rowData.locations.includes('1')
-            );
-            console.log(result);
+            const result = _.chain(locations)
+              .keyBy('id')
+              .at(rowData.locations)
+              .value();
+            // console.log(result);
 
             return (
               <>
-                {rowData.locations.map((item, idx) => {
-                  return <Fragment key={idx}>{item}</Fragment>;
+                {result.map((item) => {
+                  return <Fragment key={item.id}>{item.name}</Fragment>;
                 })}
               </>
             );
@@ -156,6 +155,24 @@ const TheTable = () => {
         {
           title: 'Affiliations',
           field: 'affiliations',
+          render: (rowData) => {
+            // console.log('!@#$%', locations);
+            // console.log('asdfg', rowData.locations);
+
+            const result = _.chain(affiliations)
+              .keyBy('id')
+              .at(rowData.affiliations)
+              .value();
+            console.log(result);
+
+            return (
+              <>
+                {result.map((item) => {
+                  return <Fragment key={item.id}>{item.name}</Fragment>;
+                })}
+              </>
+            );
+          },
         },
         {
           title: 'Weapon',
