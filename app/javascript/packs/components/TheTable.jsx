@@ -1,4 +1,11 @@
-import React, { forwardRef, Fragment, useMemo } from 'react';
+import React, {
+  forwardRef,
+  Fragment,
+  useMemo,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -40,96 +47,159 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
+import _ from 'lodash';
 import MaterialTable from 'material-table';
 import { usePeople } from '../hooks/usePeople';
-import _ from 'lodash';
+import { useLocations } from '../hooks/useLocations';
+import { useAffiliations } from '../hooks/useAffiliations';
 
 const TheTable = () => {
-  const { data: _people, isLoading, isError } = usePeople();
+  const {
+    data: _people,
+    isLoading,
+    isError,
+    pageSize,
+    page,
+    setPage,
+    totalCount,
+  } = usePeople();
 
-  const people = _people.map((item) => {
-    const picked = _.pick(item, ['id', 'attributes', 'relationships']);
-    const {
-      attributes,
-      relationships: {
-        locations: { data: _locations },
-        affiliations: { data: _affiliations },
-      },
-      id,
-    } = picked;
+  const { data: _locations } = useLocations();
+  const { data: _affiliations } = useAffiliations();
 
-    const locations = _locations.reduce((acc, curr) => {
-      return [...acc, curr.id];
-    }, []);
-
-    const affiliations = _affiliations.reduce((acc, curr) => {
-      return [...acc, curr.id];
-    }, []);
-
-    const person = {
-      ...attributes,
-      locations,
-      affiliations,
-      id,
-    };
-
-    return person;
-  });
-
-  const columns = useMemo(
-    () => [
-      {
-        title: 'First Name',
-        field: 'first-name',
-      },
-      {
-        title: 'Last Name',
-        field: 'last-name',
-      },
-      {
-        title: 'Locations',
-        field: 'locations',
-        render: (rowData) => {
-          return (
-            <>
-              {rowData.locations.map((location) => {
-                console.log(location);
-                return <Fragment key={location}>{location}</Fragment>;
-              })}
-            </>
-          );
+  const people = useMemo(() => {
+    return _people.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes', 'relationships']);
+      const {
+        attributes,
+        relationships: {
+          locations: { data: _locations_ },
+          affiliations: { data: _affiliations_ },
         },
-      },
-      {
-        title: 'Species',
-        field: 'species',
-      },
-      {
-        title: 'Gender',
-        field: 'gender',
-      },
-      {
-        title: 'Affiliations',
-        field: 'affiliations',
-      },
-      {
-        title: 'Weapon',
-        field: 'weapon',
-      },
-      {
-        title: 'Vehicle',
-        field: 'vehicle',
-      },
-    ],
-    []
-  );
+        id,
+      } = picked;
+
+      const locs = _locations_.reduce((acc, curr) => [...acc, curr.id], []);
+
+      const affls = _affiliations_.reduce((acc, curr) => [...acc, curr.id], []);
+
+      return {
+        ...attributes,
+        locations: locs,
+        affiliations: affls,
+        id,
+      };
+    });
+  }, [_people]);
+  console.log(people);
+
+  const locations = useMemo(() => {
+    return _locations.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes']);
+      const { attributes, id } = picked;
+
+      return {
+        ...attributes,
+        id,
+      };
+    });
+  }, [_locations]);
+
+  const affiliations = useMemo(() => {
+    return _affiliations.map((item) => {
+      const picked = _.pick(item, ['id', 'attributes']);
+      const { attributes, id } = picked;
+
+      return {
+        ...attributes,
+        id,
+      };
+    });
+  }, [_affiliations]);
 
   return (
     <MaterialTable
       title={'Star Wars'}
       icons={tableIcons}
       data={people}
-      columns={columns}
+      columns={[
+        {
+          title: 'First Name',
+          field: 'first-name',
+        },
+        {
+          title: 'Last Name',
+          field: 'last-name',
+        },
+        {
+          title: 'Locations',
+          field: 'locations',
+          render: (rowData) => {
+            // console.log('!@#$%', locations);
+            // console.log('asdfg', rowData.locations);
+
+            const result = _.chain(locations)
+              .keyBy('id')
+              .at(rowData.locations)
+              .value();
+            // console.log(result);
+
+            return (
+              <>
+                {result.map((item) => {
+                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
+                })}
+              </>
+            );
+          },
+        },
+        {
+          title: 'Species',
+          field: 'species',
+        },
+        {
+          title: 'Gender',
+          field: 'gender',
+        },
+        {
+          title: 'Affiliations',
+          field: 'affiliations',
+          render: (rowData) => {
+            // console.log('!@#$%', locations);
+            // console.log('asdfg', rowData.locations);
+
+            const result = _.chain(affiliations)
+              .keyBy('id')
+              .at(rowData.affiliations)
+              .value();
+            // console.log(result);
+
+            return (
+              <>
+                {result.map((item) => {
+                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
+                })}
+              </>
+            );
+          },
+        },
+        {
+          title: 'Weapon',
+          field: 'weapon',
+        },
+        {
+          title: 'Vehicle',
+          field: 'vehicle',
+        },
+      ]}
+      isLoading={isLoading}
+      options={{ pageSize, pageSizeOptions: [pageSize], loadingType: 'linear' }}
+      page={page}
+      totalCount={totalCount}
+      onChangePage={(page) => {
+        // console.log('onChangePage', page);
+        setPage(page);
+      }}
     />
   );
 };
