@@ -6,12 +6,12 @@ Rails.application.routes.draw do
       get :people, to: 'people#index'
       post 'people/all', to: 'people#create_all'
 
-      get :locations, to: 'locations#index'
-      get :affiliations, to: 'affiliations#index'
+      resources :locations, only: [:index, :show]
+      resources :affiliations, only: [:index, :show]
 
     end
   end
 
-  # redirect to root for single page view
+  # redirect to root due to SPA view
   get '*path', to: 'pages#index', via: :all
 end

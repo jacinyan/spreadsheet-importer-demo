@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo } from 'react';
+import React, { forwardRef, Fragment, useMemo } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -76,47 +76,60 @@ const TheTable = () => {
     return person;
   });
 
-  console.log(people);
+  const columns = useMemo(
+    () => [
+      {
+        title: 'First Name',
+        field: 'first-name',
+      },
+      {
+        title: 'Last Name',
+        field: 'last-name',
+      },
+      {
+        title: 'Locations',
+        field: 'locations',
+        render: (rowData) => {
+          return (
+            <>
+              {rowData.locations.map((location) => {
+                console.log(location);
+                return <Fragment key={location}>{location}</Fragment>;
+              })}
+            </>
+          );
+        },
+      },
+      {
+        title: 'Species',
+        field: 'species',
+      },
+      {
+        title: 'Gender',
+        field: 'gender',
+      },
+      {
+        title: 'Affiliations',
+        field: 'affiliations',
+      },
+      {
+        title: 'Weapon',
+        field: 'weapon',
+      },
+      {
+        title: 'Vehicle',
+        field: 'vehicle',
+      },
+    ],
+    []
+  );
 
   return (
     <MaterialTable
       title={'Star Wars'}
       icons={tableIcons}
       data={people}
-      columns={[
-        {
-          title: 'First Name',
-          field: 'first-name',
-        },
-        {
-          title: 'Last Name',
-          field: 'last-name',
-        },
-        {
-          title: 'Locations',
-          field: 'locations',
-        },
-        {
-          title: 'Species',
-          field: 'species',
-        },
-        {
-          title: 'Gender',
-          field: 'gender',
-        },
-        {
-          title: 'Affiliations',
-          field: 'affiliations',
-        },
-        {
-          title: 'Weapon',
-          field: 'weapon',
-        },
-        {
-          title: 'Vehicle',
-          field: 'vehicle',
-        },
-      ]}
+      columns={columns}
     />
   );
 };
