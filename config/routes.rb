@@ -4,12 +4,14 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get :people, to: 'people#index'
-      post :people, to: 'people#create'
-      #resources :locations
-      #resources :affiliations
+      post 'people/all', to: 'people#create_all'
+
+      resources :locations, only: [:index, :show]
+      resources :affiliations, only: [:index, :show]
+
     end
   end
 
-  # redirect to root for SPA
+  # redirect to root due to SPA view
   get '*path', to: 'pages#index', via: :all
 end

@@ -3,14 +3,26 @@ module Api
     class PeopleController < ApplicationController
       skip_before_action :verify_authenticity_token 
 
-        def index
-          @people = Person.all
+        def index         
+          if params[:page]
+            @params = {number: nil, size:nil}
 
-          render json: PersonSerializer.new(@people).serializable_hash.to_json
+            @params[:number] = params.permit![:page].to_hash['number'].to_i
+            @params[:size] = params.permit![:page].to_hash['size'].to_i
+          else
+            @params = {number: 1, size: 10}
+          end
+
+          @people = Person.page(@params[:number]).per_page(@params[:size])
+
+          total_count = Person.all.count
+
+          render  json: @people, meta: {total_count: total_count, page:@params[:number], page_size: @params[:size]}
+          
         end
 
         # TODO: move logic into models
-        def create
+        def create_all
           curr_people_locations = PeopleLocations.all.to_a
           curr_people_affiliations = PeopleAffiliations.all.to_a
           curr_locations = Location.all.to_a
@@ -31,20 +43,20 @@ module Api
             
             hashed_person.fetch_values("locations").flatten.each {
               |location|
-              location = Location.find_by(name: location)
-              location = Location.new(name: location) unless location
+              _location = Location.find_by(name: location)
+              _location = Location.new(name: location) unless _location
 
-              if location.save      
-                curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: location.id)
+              if _location.save      
+                curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: _location.id)
               end 
             }
             hashed_person.fetch_values("affiliations").flatten.each {
               |affiliation| 
-              affiliation = Affiliation.find_by(name: affiliation)
-              affiliation = Affiliation.new(name: affiliation)unless affiliation
+              _affiliation = Affiliation.find_by(name: affiliation)
+              _affiliation = Affiliation.new(name: affiliation) unless _affiliation
 
-              if affiliation.save 
-                curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: affiliation.id)
+              if _affiliation.save 
+                curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: _affiliation.id)
               end 
             }  
 

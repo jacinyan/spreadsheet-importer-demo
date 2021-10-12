@@ -1,6 +1,5 @@
-class LocationSerializer
-  include JSONAPI::Serializer
-  attributes :name
+class LocationSerializer < ActiveModel::Serializer
+  attributes :id, :name
 
   has_many :people, through: :people_locations
 end
