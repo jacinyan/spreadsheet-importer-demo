@@ -1,13 +1,25 @@
 import React, { useRef, useCallback } from 'react';
-import TheInputBox from '../components/TheInputBox';
+import TheInput from '../components/TheInput';
 import TheTable from '../components/TheTable';
 import XLSX from 'xlsx';
+import { formatter } from '../utils/formatter';
 
 const Home = () => {
   const inputRef = useRef();
 
   const handleImport = useCallback((e) => {
     const file = e.target.files[0];
+
+    if (file.size > 1024 * 1024) {
+      alert('No larger than 1024KB');
+      return;
+    }
+
+    const type = file.name.split('.');
+    if (type[type.length - 1] !== 'xlsx' && type[type.length - 1] !== 'xls') {
+      alert('Only excel spreadsheets are accepted');
+      return;
+    }
 
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -20,11 +32,13 @@ const Home = () => {
       const workSheet = workBook.Sheets[workSheetName];
       // convert to array
       const fileData = XLSX.utils.sheet_to_json(workSheet, { header: 1 });
-      console.log(fileData);
+      // console.log(fileData);
 
-      const headers = fileData[0];
+      // const headers = fileData[0];
+      // get rid of table head
       fileData.splice(0, 1);
-      console.log(fileData);
+      // console.log(fileData);
+      const people = formatter(fileData);
     };
 
     reader.readAsBinaryString(file);
@@ -32,7 +46,7 @@ const Home = () => {
 
   return (
     <>
-      <TheInputBox onChange={handleImport} ref={inputRef} />
+      <TheInput onChange={handleImport} ref={inputRef} />
       <TheTable />
     </>
   );
