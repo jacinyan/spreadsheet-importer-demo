@@ -91,7 +91,7 @@ const TheTable = () => {
       };
     });
   }, [_people]);
-  console.log(people);
+  // console.log(people);
 
   const locations = useMemo(() => {
     return _locations.map((item) => {
@@ -146,8 +146,13 @@ const TheTable = () => {
 
             return (
               <>
-                {result.map((item) => {
-                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
+                {result.map((item, idx) => {
+                  return (
+                    <Fragment key={item?.name}>
+                      {item?.name}
+                      {idx === result.length - 1 ? '' : ', '}
+                    </Fragment>
+                  );
                 })}
               </>
             );
@@ -176,8 +181,13 @@ const TheTable = () => {
 
             return (
               <>
-                {result.map((item) => {
-                  return <Fragment key={item?.name}>{item?.name}</Fragment>;
+                {result.map((item, idx) => {
+                  return (
+                    <Fragment key={item?.name}>
+                      {item?.name}
+                      {idx === result.length - 1 ? '' : ', '}
+                    </Fragment>
+                  );
                 })}
               </>
             );
@@ -196,9 +206,9 @@ const TheTable = () => {
       options={{ pageSize, pageSizeOptions: [pageSize], loadingType: 'linear' }}
       page={page}
       totalCount={totalCount}
-      onChangePage={(page) => {
-        // console.log('onChangePage', page);
-        setPage(page);
+      onChangePage={(target) => {
+        // console.log('onChangePage', target);
+        setPage(target);
       }}
     />
   );
