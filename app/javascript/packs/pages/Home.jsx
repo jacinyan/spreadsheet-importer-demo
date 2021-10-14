@@ -3,21 +3,24 @@ import TheInput from '../components/TheInput';
 import TheTable from '../components/TheTable';
 import XLSX from 'xlsx';
 import { formatter } from '../utils/formatter';
-import { useMutation, QueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import axios from 'axios';
 
-const queryClient = new QueryClient();
-
 const Home = () => {
-  const { mutate } = useMutation(
+  const queryClient = useQueryClient();
+
+  const { mutateAsync, isLoading } = useMutation(
     (people) =>
       axios.post('http://localhost:3000/api/v1/people/all', {
         people,
       }),
     {
-      onSuccess: (res) => {
+      onSuccess: async (res) => {
         // console.log(res);
-        queryClient.invalidateQueries(['people', 1, 10]);
+        await queryClient.invalidateQueries(['people', 0, 10]);
+        await queryClient.invalidateQueries('locations');
+        await queryClient.invalidateQueries('affiliations');
+        // queryCache.clear();
       },
     }
   );
@@ -57,7 +60,7 @@ const Home = () => {
       // console.log(fileData);
       const people = formatter(fileData);
 
-      mutate(people);
+      mutateAsync(people);
     };
 
     reader.readAsBinaryString(file);
@@ -65,7 +68,7 @@ const Home = () => {
 
   return (
     <>
-      <TheInput onChange={handleImport} ref={inputRef} />
+      <TheInput onChange={handleImport} ref={inputRef} isLoading={isLoading} />
       <TheTable />
     </>
   );

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 
 export const usePeople = () => {
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
 
   const { data, isError, isLoading } = useQuery(
