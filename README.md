@@ -1,4 +1,4 @@
-# A React on Rails app for the coding challenge
+# A React on Rails demo for the coding challenge
 
 ## Features
 
