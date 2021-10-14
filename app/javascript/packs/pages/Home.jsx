@@ -3,8 +3,25 @@ import TheInput from '../components/TheInput';
 import TheTable from '../components/TheTable';
 import XLSX from 'xlsx';
 import { formatter } from '../utils/formatter';
+import { useMutation, QueryClient } from 'react-query';
+import axios from 'axios';
+
+const queryClient = new QueryClient();
 
 const Home = () => {
+  const { mutate } = useMutation(
+    (people) =>
+      axios.post('http://localhost:3000/api/v1/people/all', {
+        people,
+      }),
+    {
+      onSuccess: (res) => {
+        // console.log(res);
+        queryClient.invalidateQueries(['people', 1, 10]);
+      },
+    }
+  );
+
   const inputRef = useRef();
 
   const handleImport = useCallback((e) => {
@@ -39,6 +56,8 @@ const Home = () => {
       fileData.splice(0, 1);
       // console.log(fileData);
       const people = formatter(fileData);
+
+      mutate(people);
     };
 
     reader.readAsBinaryString(file);

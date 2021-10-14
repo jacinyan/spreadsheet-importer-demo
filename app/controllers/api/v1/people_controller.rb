@@ -29,8 +29,9 @@ module Api
           curr_affiliations = Affiliation.all.to_a
           curr_people = Person.all.to_a
           
+
           # loop through array of person objects
-          params.permit![:_json].each do |person|
+          params.permit![:people].each do |person|
             next if person[:affiliations].nil? || person[:affiliations].empty?
 
             hashed_person = person.to_hash 
