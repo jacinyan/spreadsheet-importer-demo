@@ -27,40 +27,49 @@ module Api
           curr_people_affiliations = PeopleAffiliations.all.to_a
           curr_locations = Location.all.to_a
           curr_affiliations = Affiliation.all.to_a
-          curr_people = Person.all.to_a
-          
+          curr_people = Person.all.to_a   
+           # loop through array of person objects
+          begin        
+            params.permit![:people].each do |person|
+              next if person[:affiliations].nil? || person[:affiliations].empty?
 
-          # loop through array of person objects
-          params.permit![:people].each do |person|
-            next if person[:affiliations].nil? || person[:affiliations].empty?
+              hashed_person = person.to_hash 
+              @person = Person.new(hashed_person.slice!('locations','affiliations'))
+                  if @person.save
+                    curr_people << @person
+                  else 
+                    raise StandardError.new(@person.errors.messages)
+                  end 
+              
+              hashed_person.fetch_values("locations").flatten.each {
+                |location|
+                _location = Location.find_by(name: location)
+                _location = Location.new(name: location) unless _location
 
-            hashed_person = person.to_hash 
-            @person = Person.new(hashed_person.slice!('locations','affiliations'))
-                if @person.save
-                  curr_people << @person
+                if _location.save      
+                  curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: _location.id)
                 else 
-                  render json: {error: @person.errors.messages}, status: 422
+                  raise StandardError.new(_location.errors.messages)
                 end 
-            
-            hashed_person.fetch_values("locations").flatten.each {
-              |location|
-              _location = Location.find_by(name: location)
-              _location = Location.new(name: location) unless _location
+              }
 
-              if _location.save      
-                curr_people_locations << PeopleLocations.create(person_id: @person.id, location_id: _location.id)
-              end 
-            }
-            hashed_person.fetch_values("affiliations").flatten.each {
-              |affiliation| 
-              _affiliation = Affiliation.find_by(name: affiliation)
-              _affiliation = Affiliation.new(name: affiliation) unless _affiliation
+              hashed_person.fetch_values("affiliations").flatten.each {
+                |affiliation| 
+                _affiliation = Affiliation.find_by(name: affiliation)
+                _affiliation = Affiliation.new(name: affiliation) unless _affiliation
 
-              if _affiliation.save 
-                curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: _affiliation.id)
-              end 
-            }  
-
+                if _affiliation.save 
+                  curr_people_affiliations << PeopleAffiliations.create(person_id:@person.id, affiliation_id: _affiliation.id)
+                else 
+                  raise StandardError.new(_affiliation.errors.messages)
+                end 
+              }  
+              
+            end
+          rescue StandardError => error
+            render json: {error: error}, status: 422 
+          else
+            render json: {message: 'Succssfully inserted'}, status: 201
           end
         end
 

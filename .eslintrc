@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     // window object etc part of browser are made available globally.
     "browser": true,

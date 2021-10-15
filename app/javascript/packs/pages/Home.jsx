@@ -68,7 +68,12 @@ const Home = () => {
 
   return (
     <>
-      <TheInput onChange={handleImport} ref={inputRef} isLoading={isLoading} />
+      <TheInput
+        onChange={handleImport}
+        ref={inputRef}
+        isLoading={isLoading}
+        data-test={'component-the-input'}
+      />
       <TheTable />
     </>
   );

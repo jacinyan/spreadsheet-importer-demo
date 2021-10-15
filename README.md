@@ -1,24 +1,41 @@
-# README
+# A React on Rails demo for the coding challenge
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Features
 
-Things you may want to cover:
+- Frontend: React + React Router + React Query + Axios
+- Backend: Ruby on Rails
+- UI lib: Material UI + Material Table
 
-* Ruby version
+## Quick Start
 
-* System dependencies
+```sh
+$ git clone https://github.com/jacinyan/spreadsheet-importer-demo.git
+$ cd spreadsheet-importer-demo/
 
-* Configuration
+# Install dependencies
+$ bundle install && yarn install
 
-* Database creation
+# Database migration
+$ rails db:create
+$ rails db:migrate
 
-* Database initialization
+# Run!
+$ rails s [-p] [<PORT>]
 
-* How to run the test suite
+Then open http://localhost:<PORT>
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+## Project Structure
 
-* Deployment instructions
+Only core directories/files will be elaborated below.
 
-* ...
+```
+# Trivial folders/files had been omitted
+
+
+```
+
+## TODO
+
+- Deployment
+- Responsive layout
