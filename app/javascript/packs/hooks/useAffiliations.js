@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 
 export const useAffiliations = () => {
   const { data, isError, isLoading } = useQuery('affiliations', () =>
-    axios.get('http://localhost:3000/api/v1/affiliations')
+    axios.get('/api/v1/affiliations')
   );
 
   return useMemo(

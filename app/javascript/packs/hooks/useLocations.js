@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 
 export const useLocations = () => {
   const { data, isError, isLoading } = useQuery('locations', () =>
-    axios.get('http://localhost:3000/api/v1/locations')
+    axios.get('/api/v1/locations')
   );
 
   return useMemo(

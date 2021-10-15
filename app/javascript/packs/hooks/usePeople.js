@@ -10,9 +10,7 @@ export const usePeople = () => {
     ['people', page, pageSize],
     () =>
       axios.get(
-        `http://localhost:3000/api/v1/people?page[number]=${
-          page + 1
-        }&page[size]=${pageSize}`
+        `/api/v1/people?page[number]=${page + 1}&page[size]=${pageSize}`
       )
   );
   const totalCount = data?.data?.meta?.['total-count'];

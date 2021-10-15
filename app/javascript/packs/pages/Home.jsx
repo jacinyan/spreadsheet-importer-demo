@@ -11,7 +11,7 @@ const Home = () => {
 
   const { mutateAsync, isLoading } = useMutation(
     (people) =>
-      axios.post('http://localhost:3000/api/v1/people/all', {
+      axios.post('/api/v1/people/all', {
         people,
       }),
     {
