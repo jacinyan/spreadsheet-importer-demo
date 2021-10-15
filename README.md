@@ -9,8 +9,8 @@
 ## Quick Start
 
 ```sh
-$ git clone https://github.com/jacinyan/sentia-demo.git
-$ cd sentia-demo/
+$ git clone https://github.com/jacinyan/spreadsheet-importer-demo.git
+$ cd spreadsheet-importer-demo/
 
 # Install dependencies
 $ bundle install && yarn install
