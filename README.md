@@ -25,17 +25,8 @@ $ rails s [-p] [<PORT>]
 Then open http://localhost:<PORT>
 ```
 
-## Project Structure
+## TODD
 
-Only core directories/files will be elaborated below.
-
-```
-# Trivial folders/files had been omitted
-
-
-```
-
-## TODO
-
-- Deployment
+- Error handling
+- Continuation on Test Cases
 - Responsive layout
