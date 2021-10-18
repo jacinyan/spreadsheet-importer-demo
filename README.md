@@ -2,7 +2,7 @@
 
 ## Features
 
-An simple full-stack upload importer app that enables user to upload .xls/.xlsx(.csv to be implemented) files and view the results
+An minimal importer app that allows users to upload .xls/.xlsx (.csv to be implemented) files and view the results in a table:
 
 - Frontend: React + React Router + React Query + Axios
 - Backend: Ruby on Rails
