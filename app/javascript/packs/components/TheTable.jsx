@@ -203,7 +203,12 @@ const TheTable = () => {
         },
       ]}
       isLoading={isLoading}
-      options={{ pageSize, pageSizeOptions: [pageSize], loadingType: 'linear' }}
+      options={{
+        pageSize,
+        pageSizeOptions: [pageSize],
+        loadingType: 'linear',
+        headerStyle: { backgroundColor: '#71C671' },
+      }}
       page={page}
       totalCount={totalCount}
       onChangePage={(target) => {

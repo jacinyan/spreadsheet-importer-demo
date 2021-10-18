@@ -1,6 +1,8 @@
-# A React on Rails demo for the coding challenge
+# An Excel Spreadsheet importer demo with React on Rails
 
 ## Features
+
+An simple full-stack upload importer app that enables user to upload .xls/.xlsx(.csv to be implemented) files and view the results
 
 - Frontend: React + React Router + React Query + Axios
 - Backend: Ruby on Rails
@@ -27,6 +29,7 @@ Then open http://localhost:<PORT>
 
 ## TODD
 
+- Implement CSV frontend logic
 - Error handling
 - Continuation on Test Cases
 - Responsive layout

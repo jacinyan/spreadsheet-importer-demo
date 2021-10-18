@@ -40,6 +40,7 @@ const Home = () => {
       alert('Only excel spreadsheets are accepted');
       return;
     }
+    // TODO: implement CSV viewer
 
     const reader = new FileReader();
     reader.onload = (evt) => {
