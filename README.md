@@ -5,8 +5,12 @@
 An minimal importer app that allows users to upload .xls/.xlsx (.csv to be implemented) files and view the results in a table:
 
 - Frontend: React + React Router + React Query + Axios
-- Backend: Ruby on Rails
+- Backend: Ruby on Rails + PostgreSql
 - UI lib: Material UI + Material Table
+
+## Database Schema
+
+![Schema](./app/assets/images/dbschema.png)
 
 ## Quick Start
 
