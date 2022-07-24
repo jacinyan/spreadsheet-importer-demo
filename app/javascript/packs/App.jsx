@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import avatar from '../../../public/avatar.jpeg';
 
 const App = () => {
   return (
